@@ -1,0 +1,185 @@
+Lessons Learned:
+#1
+Create classes for the main objects in your application helps because
+you can instantiate them wherever you want in your code and everything 
+stays in order much easier.  If you copy code out of your file, place it 
+in another file, and then try to import it back into the file
+it came from at the top, it is likely for the code to be out 
+of order.  which will throw an error.
+Therefore, if I want to modularize, it is better to create classes with methods
+and properties even if the methods are the same name basically.  For example for the firebase auth
+service, the methods were all supplied (signInWithEmailAndPassword,
+signUpWithEmailAndPassword, and signOut).  However, I wanted to modularize
+my code to make it more readable and easier to follow and debug later.  I 
+didn’t want everything in app.js.  So I created a class for this Auth 
+object and basically gave these methods the same name (signIn, signUp, and 
+signOut).  Then I instantiate this class in app.js and call these methods 
+with app.signIn(), app.signUp(), app.signOut(). 
+
+I also created a method too for onAuthStateChanged called 
+subscribeUserStatus(callback). This tripped me up at first because this is
+a live listener and my code was only running once (and returning false no
+ matter whether the user was logged in or not.  I wasn’t sure how to pass the
+true or false value back to my app.js file.  I initially was trying to set a 
+variable equal to the return value of the onAuthStateChanged (i.e. let userStatus = 
+auth.CheckUserStatus()) but the return value of onAuthStateChanged 
+is an unsubscribe function, so that doesn’t work.  And this would only run once
+because this isn't what fires from onAuthStateChanged method, the callback is 
+what fires when the user signs in or out.  24 hours later, I realized all I
+needed was my own callback function inside the callback of onAuthStateChanged.
+Therefore, when a user signs in or signs out, the onAuthStateChanged callback
+fires which fires my callback. function looks like this: 
+
+Class Auth{
+
+ subscribeToUserStatus(callback){
+        auth.onAuthStateChanged(user => {
+            if (user){
+                console.log('logged in user:', user.email);
+                callback(user);
+            } else {
+                console.log('user is logged out');
+                callback(user);
+            }
+        })    
+    }
+}
+
+so in my app.js file,  when I call
+
+auth.subscribeToUserStatus(()=> {
+
+    // This is now a live listener because the callback from onAuthStateChanged is
+    // always going to call this callback.
+
+})
+
+
+#2 MVC
+Also, when using classes, it's easier to follow the MVC pattern.  you can do what you need to do 
+with each class, then return that value to the controller (app.js). then instantiate a 
+view class (UI) to add something to the view. there were many times, when I was tempted to 
+add something to the view from a callback in auth.js and database.js. this is a bad idea 
+because the code becomes hard to edit later on as multiple files are adding things to the view.
+It's much easier to understand the structure of the code if the database stuff is handled 
+completely separately from DOM maninpulation tasks.
+
+
+#3 Promises
+In my signin, signUp, and a few other auth methods, I had confusion in returning asynchronous data
+using .then().  Using async and await made sense as I could just write aync in front of the function,
+then await the data, and return it.  
+
+I tried this same approach using .then(), but I wasn't returning the promise itself, i was only 
+returning the data from the promise.  therefore, when I called the promise from app.js, the initial
+promise that i wan't returning resolved immediately with return value of undefined. it wasn't
+waiting for the data to come back from auth.js.  So when calling a function that returns a promise
+from another function, be sure to return the promise itself first, then return anything inside that 
+promise you want as well like below:  In the example below, i return the promise then I return the
+cred variable as well.
+
+ signIn(email, password){
+        return auth.signInWithEmailAndPassword(email, password).then(cred => {
+            console.log(cred);
+            return cred;
+          })
+    }
+
+so in my app.js file,  I can now tack on .then() because i've returned the promise. 
+
+auth.signIn(email, password).then(()=> {
+
+})
+
+if i hadn't returned the promise and i stuck .then() onto auth.signIn(), the return value
+to auth.signIn() would look like:
+
+Promise.resolve(undefined) instead of Promise.resolve(promise)
+
+#3 Storing Value from real time listener
+
+Initially I was confused on how to store the current userID in app.js without creating 
+a global variable in app.js.  I just realized I could store the userID as a property
+in the auth class once the subscribe method confirmed a user was logged in. then reference 
+auth.currentUserID in app.js.  
+
+class Auth {
+    constructor(){
+    *** this.currentUserID = null; ***
+    }
+    
+    subscribeToUserStatus(callback){
+        auth.onAuthStateChanged(user => {
+            if (user){
+                console.log('logged in user:', user.email);
+                console.log('current userID:', user.uid);
+            *** this.currentUserID = user.uid; ***
+                callback(user);
+            } else {
+                console.log('user is logged out');
+                this.currentUserID = null;
+                callback(user);
+            }
+        })    
+    }
+
+    app.js
+    If (auth.currentUserID){
+        //do something
+    }
+
+#4 DOM maninpulation (UI Class)
+
+When setting up UI class, set up multiple parameters for the constructor to handle what type of 
+element is being passed in. If the element passed in is a container, instantiate the UI object
+using the first parameter.  If the element passed in is the element itself, pass 'null' for the
+first parameter, and the element as the second parameter.
+
+Class UI {
+
+    constructor(container, element) {
+        if(container) {
+            this.elementContainer = container;
+            this.elements = container.children;
+        }
+        this.element = element;
+    }
+}
+
+//app.js
+
+const navUI = navLinksContainer ? new UI(navLinksContainer) : null; //passes the container element
+const greetingUI = greetingElement ? new UI(null, greetingElement) : null;  //pass the element itself
+
+#5 Constructor elements
+Don't turn elements into arrays right off the bat.  when you set a property to be equal to 
+element.children, it most likely will be an htmlcollection.  these are live lists.  Meaning elements
+that are added or removed will automatically be updated in this htmlcollection.  if the htmlcollection
+is coverted to an array in the constructor or the querySelector or getelementbyID methods (so that you 
+can use array methods like forEach) this negates the live lists behaviour. It is better to leave
+them as an htmlcollection in the constructor, then convert them to arrays in the class methods when
+you actually need to work with them.  See below:
+
+class UI {
+
+    constructor(container, element) {
+        if(container) {
+            this.elementContainer = container; //element 
+            this.elements = container.children; // this is htmlcollection (live)
+        }
+        this.element = element;
+    }
+    
+    greet(name){
+        this.element.innerHTML = `Welcome ${name}`;
+    }
+
+    removeElement(id){
+        Array.from(this.elements).forEach(element => { //convert htmlcollection to array here so I can use forEach
+            if (element.getAttribute('data-id') === id) {
+                element.remove();
+            }
+        })
+    }
+      
+    }

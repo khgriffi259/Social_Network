@@ -1,0 +1,80 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <title>Welcome to the DevConnector</title>
+  </head>
+  <body>
+      <nav class="navbar bg-dark">
+          <h3 class="logo">
+            <a href="dashboard.html?page=dashboard"> <i class="fas fa-code"></i> DevConnector </a>
+          </h3>
+          <ul class="links">
+            <li class="logged-in"><a href="profiles.html?page=profiles">Developers</a></li>
+            <li class="logged-in"><a href="posts.html">Posts</a></li>
+            <li class="logged-out"><a href="register.html">Register</a></li>
+            <li class="logged-out"><a href="login.html">Login</a></li>
+            <li class="logged-in" id="logout">
+              <a href="login.html"><i class="fas fa-sign-out-alt"></i>
+                <span class="hide-sm"> Logout</span></a>
+            </li>
+          </ul>
+        </nav>
+
+    <section class="container">
+      <h1 class="large text-primary my-1">Add An Experience</h1>
+      <h2 class="lead">
+        <i class="fas fa-user"></i> Add any developer/programming position that you have had in the past
+      </h2>
+      <p>* required field</p>
+      <form action="" class="form add-experience">
+        <div class="form-group">
+          <input type="text" name="title" placeholder="* Job Title">
+        </div>
+        <div class="form-group">
+          <input type="text" name="company" placeholder="* Company">
+        </div>
+        <div class="form-group">
+          <input type="text" name="city" placeholder="City">
+        </div>
+        <div class="form-group">
+          <input type="text" name="state" placeholder="State">
+        </div>
+        <div class="form-group">
+          <h4>Start Date</h4>
+          <input type="date" name = "start_date" placeholder="">
+        </div>
+        <div class="form-group">
+          <h4>End Date</h4>
+          <input type="date" name = "end_date" placeholder="mm/dd/yyyy">
+        </div>
+        <div class="form-group">
+          <input type="checkbox">
+          <span>Current Job</span>
+        </div>
+        <div class="form-group">
+          <textarea name="" id="" cols="30" rows="5" placeholder="Job description"></textarea>
+        </div>
+
+        <button class="btn btn-primary">Submit</button>
+        <a href="dashboard.html" class="btn">Go Back</a>
+      </form>
+
+    </section>
+
+    <script src="assets/bundle.js"></script>
+
+  </body>
+</html>

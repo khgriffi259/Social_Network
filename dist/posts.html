@@ -1,0 +1,90 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <title>Welcome to the DevConnector</title>
+</head>
+
+<body>
+        <nav class="navbar bg-dark">
+                <h3 class="logo">
+                  <a href="dashboard.html?page=dashboard"> <i class="fas fa-code"></i> DevConnector </a>
+                </h3>
+                <ul class="links">
+                  <li class="logged-in"><a href="profiles.html?page=profiles">Developers</a></li>
+                  <li class="logged-in"><a href="posts.html">Posts</a></li>
+                  <li class="logged-out"><a href="register.html">Register</a></li>
+                  <li class="logged-out"><a href="login.html">Login</a></li>
+                  <li class="logged-in" id="logout">
+                    <a href="login.html"><i class="fas fa-sign-out-alt"></i>
+                      <span class="hide-sm"> Logout</span></a>
+                  </li>
+                </ul>
+              </nav>
+
+    <section class="container">
+        <h1 class="large text-primary my-1">Posts</h1>
+        <h2 class="lead"><i class="fas fa-user"></i> Welcome to the community</h2>
+        <div class="post-form-header bg-primary">
+            <h3>Say something..</h3>
+        </div>
+        <form class="form">
+            <div class="form-group">
+                <textarea name="" id="" cols="30" rows="5" placeholder="Create post"></textarea>
+            </div>
+            <button class="btn btn-dark">Submit</button>
+        </form>
+        <div class="posts my-2">
+            <div class="post bg-white m-1 p-1">
+                <div>
+                    <a>
+                        <img class="round-img"
+                            src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200" alt="" />
+                        <h4>John Doe</h4>
+                    </a>
+                </div>
+                <div class="post-content">
+                    <p class="my-1">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod
+                        fugit accusamus perferendis delectus rem sunt voluptate
+                        consequatur, repellat labore facere saepe veniam. Natus, qui
+                        vitae. Incidunt itaque commodi veniam? Optio?
+                    </p>
+                    <button class="btn"><i class="fas fa-thumbs-up"></i><span> 4</span></button>
+                    <button class="btn"><i class="fas fa-thumbs-down"></i></button>
+                    <a href="post.html" class="btn btn-primary">Comments</a>
+                </div>
+            </div>
+            <div class="post bg-white m-1 p-1">
+                <div>
+                    <a>
+                        <img class="round-img"
+                            src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200" alt="" />
+                        <h4>John Doe</h4>
+                    </a>
+                </div>
+                <div class="post-content">
+                    <p class="my-1"> 
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod
+                        fugit accusamus perferendis delectus rem sunt voluptate
+                        consequatur, repellat labore facere saepe veniam. Natus, qui
+                        vitae. Incidunt itaque commodi veniam? Optio?
+                    </p>
+                    <button class="btn"><i class="fas fa-thumbs-up"></i></button>
+                    <button class="btn"><i class="fas fa-thumbs-down"></i></button>
+                    <a href="post.html" class="btn btn-primary">Comments</a>
+                </div>
+            </div>
+    </section>
+
+    <script src="assets/bundle.js"></script>
+
+</body>
+
+</html>
